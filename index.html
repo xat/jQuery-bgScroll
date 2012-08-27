@@ -4,8 +4,20 @@
 <head>
   <title></title>
   <script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
+  <script src="jquery.bgscroll.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      $('#background').bgScroll();
+
+      $('#background').trigger('next');
+    });
+  </script>
 </head>
 <body>
+
+  <div id="background"></div>
+
 
 </body>
 </html>
