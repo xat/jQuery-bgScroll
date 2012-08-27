@@ -21,6 +21,8 @@
          that.imageRatio = that.orgWidth / that.orgHeight;
          that.currentStep = options.startStep;
          that.minDiffBottom = options.steps * options.stepMinHeight;
+         that.isAnimating = false;
+
          that.update();
          that.$image.fadeIn();
          $(win).on('resize', $.proxy(that.update, that));
@@ -28,6 +30,7 @@
 
       $container.on('bgscroll.next', $.proxy(this.next, this));
       $container.on('bgscroll.prev', $.proxy(this.prev, this));
+      $container.on('bgscroll.step', $.proxy(this.step, this));
 
     };
 
@@ -45,12 +48,31 @@
       this.gotoStep(this.currentStep+1);
     };
 
+    Widget.prototype.step = function(e, step) {
+      this.gotoStep(step);
+    };
+
     Widget.prototype.gotoStep = function(step) {
-      this.$image.animate({top: (step * this.currentStepDistance) + 'px'}, options.animationTime);
+      var that = this;
+
+      if (this.isAnimating) {
+        return;
+      } else {
+        this.isAnimating = true;
+      }
+
+      this.$image.animate({top: (step * this.currentStepDistance) + 'px'}, options.animationTime, function() {
+        that.isAnimating = false;
+      });
+
       this.currentStep = step;
     };
 
     Widget.prototype.update = function() {
+
+      if (this.isAnimating) {
+        return;
+      }
 
       var winWidth = $(win).width(),
           winHeight = $(win).height(),
