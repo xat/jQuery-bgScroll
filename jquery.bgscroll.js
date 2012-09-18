@@ -6,27 +6,28 @@
     var Widget = function($container) {
       var that = this;
 
+      if (options.bodyChild) {
+        $container.appendTo('body');
+      }
+
       $container.css(options.containerCss);
 
-      $('<img/>', {
-        src: options.image,
-        css: {
-          'position': 'absolute'
-        }
-      }).appendTo($container).hide().load(function() {
+      var imgSrc = $container.data('img-src')?$container.data('img-src'):options.image;
 
-         that.$image = $(this);
-         that.orgWidth = $(this).width();
-         that.orgHeight = $(this).height();
-         that.imageRatio = that.orgWidth / that.orgHeight;
-         that.currentStep = options.startStep;
-         that.minDiffBottom = options.steps * options.stepMinHeight;
-         that.isAnimating = false;
+      $('<img/>').appendTo($container).hide().load(function() {
 
-         that.update();
-         that.$image.fadeIn();
-         $(win).on('resize', $.proxy(that.update, that));
-      });
+            that.$image = $(this);
+            that.orgWidth = $(this).width();
+            that.orgHeight = $(this).height();
+            that.imageRatio = that.orgWidth / that.orgHeight;
+            that.currentStep = options.startStep;
+            that.minDiffBottom = options.steps * options.stepMinHeight;
+            that.isAnimating = false;
+
+            that.update();
+            that.$image.fadeIn();
+            $(win).on('resize', $.proxy(that.update, that));
+          }).attr('src', imgSrc).css('position', 'absolute');
 
       $container.on('bgscroll.next', $.proxy(this.next, this));
       $container.on('bgscroll.prev', $.proxy(this.prev, this));
@@ -54,6 +55,10 @@
 
     Widget.prototype.gotoStep = function(step) {
       var that = this;
+
+      if (typeof this.$image === 'undefined') {
+        return;
+      }
 
       if (this.isAnimating) {
         return;
@@ -103,7 +108,6 @@
     };
 
     return this.each(function() {
-
       new Widget($(this));
 
     });
@@ -114,14 +118,16 @@
     'steps': 3,
     'startStep': 1,
     'stepMinHeight': 50,
+    'bodyChild': false,
     'animationTime': 800,
     'containerCss': {
       'width': '100%',
       'height': '100%',
       'top': '0',
       'left': '0',
-      'position': 'absolute',
-      'overflow': 'hidden'
+      'position': 'fixed',
+      'overflow': 'hidden',
+      'z-index': '-1'
     }
   };
 
