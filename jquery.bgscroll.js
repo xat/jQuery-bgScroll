@@ -12,22 +12,23 @@
 
       $container.css(options.containerCss);
 
-      var imgSrc = $container.data('img-src')?$container.data('img-src'):options.image;
+      var imgSrc = $container.data('img-src') ? $container.data('img-src') : options.image;
 
       $('<img/>').appendTo($container).hide().load(function() {
 
-            that.$image = $(this);
-            that.orgWidth = $(this).width();
-            that.orgHeight = $(this).height();
-            that.imageRatio = that.orgWidth / that.orgHeight;
-            that.currentStep = options.startStep;
-            that.minDiffBottom = options.steps * options.stepMinHeight;
-            that.isAnimating = false;
+        that.$image = $(this);
+        that.orgWidth = $(this).width();
+        that.orgHeight = $(this).height();
+        that.imageRatio = that.orgWidth / that.orgHeight;
+        that.currentStep = options.startStep;
+        that.minDiffBottom = options.steps * options.stepMinHeight;
+        that.isAnimating = false;
 
-            that.update();
-            that.$image.fadeIn();
-            $(win).on('resize', $.proxy(that.update, that));
-          }).attr('src', imgSrc).css('position', 'absolute');
+        that.update();
+        that.$image.fadeIn();
+        $(win).on('resize', $.proxy(that.update, that));
+
+      }).attr('src', imgSrc).css('position', 'absolute');
 
       $container.on('bgscroll.next', $.proxy(this.next, this));
       $container.on('bgscroll.prev', $.proxy(this.prev, this));
@@ -76,7 +77,7 @@
     Widget.prototype.update = function() {
 
       if (this.isAnimating) {
-        return;
+        return this;
       }
 
       var winWidth = $(win).width(),
@@ -109,7 +110,6 @@
 
     return this.each(function() {
       new Widget($(this));
-
     });
   };
 
@@ -118,7 +118,7 @@
     'steps': 3,
     'startStep': 1,
     'stepMinHeight': 50,
-    'bodyChild': false,
+    'bodyChild': true,
     'animationTime': 800,
     'containerCss': {
       'width': '100%',

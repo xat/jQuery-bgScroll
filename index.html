@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
   <title></title>
@@ -8,16 +7,21 @@
 
   <script>
     $(document).ready(function() {
-      $('#background').bgScroll();
-
-      $('#background').trigger('next');
+      $bg = $('#background').bgScroll({
+        'image': 'background.jpg'
+      });
+      $('button').on('click', function() {
+          console.log($(this).attr('id'));
+          $bg.trigger('bgscroll.' + $(this).attr('id'));
+      });
     });
   </script>
+
 </head>
 <body>
-
   <div id="background"></div>
-
-
+  <p>
+    <button id="prev">prev</button> | <button id="next">next</button>
+  </p>
 </body>
 </html>
